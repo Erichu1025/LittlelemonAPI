@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+
+        <!-- 
+            IMPORTANT: Use method="POST", action="" (to post back to /login/),
+            and include csrf_token so Django can process the request securely.
+        -->
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <!-- If there are any form errors, display a custom message -->
+            {% if form.errors %}
+            <p style="color:red;"><strong>Your username or password does not match.</strong></p>
+            {% endif %}
+
+            <!-- Render the Django-auth form fields (username, password) -->
+            {{ form.as_p }}
+
+            <!-- Preserve the next parameter (if any), so user returns to the page they tried to access -->
+            <input type="hidden" name="next" value="{{ request.GET.next|default_if_none:'' }}">
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="links">
+            <a href="#">Forgot Password?</a> | <a href="#">Register</a>
+        </div>
+    </div>
+</body>
+</html>

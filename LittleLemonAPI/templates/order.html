@@ -1,0 +1,53 @@
+{% load static cart_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+
+    <div class="order-summary-container">
+        <h1>Order Summary</h1>
+
+        <!-- 
+            If your view passes something like `order_items` (list of items) 
+            and `total_price` (the total cost), display them here.
+        -->
+        {% if order_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ item.menuitem.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.unit_price }}</td>
+                    <td>
+                        <!-- Show line total (quantity * unit_price) -->
+                        ${{ item.quantity|multiply:item.unit_price|floatformat:2 }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p>
+            <strong>Total:</strong> ${{ total_price|floatformat:2 }}
+        </p>
+
+        {% else %}
+        <p>No items in your order.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

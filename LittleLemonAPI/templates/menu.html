@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="menu-container">
+        <h1>Our Menu</h1>
+
+        <!-- Cart Button at the top -->
+        <a href="{% url 'cart-page' %}">
+            <button>View Cart</button>
+        </a>
+
+        <div class="menu-grid">
+            {% for item in menu_items %}
+            <div class="menu-item">
+                <!-- Display the image, title, description, and price -->
+
+                <h3>{{ item.name }}</h3> <!-- Ensure the field name matches the model -->
+                <p>{{ item.title }}</p>
+                <p>${{ item.price }}</p>
+                <a href="{% url 'menu-item' item.id %}">
+                    <button>View Details</button>
+                </a>
+            </div>
+            {% empty %}
+            <p>No menu items available at the moment. Please check back later!</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

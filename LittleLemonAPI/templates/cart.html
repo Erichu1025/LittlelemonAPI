@@ -1,0 +1,64 @@
+{% load static cart_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Your Shopping Cart</h1>
+
+        {% if cart_items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.menuitem.title }}</td>
+                    <td>
+                        <!-- Form to update quantity -->
+                        <form method="POST" action="{% url 'cart-detail' item.id %}">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                    <td>${{ item.unit_price }}</td>
+                    <td>${{ item.quantity|multiply:item.unit_price|floatformat:2 }}</td>
+                    <td>
+                        <!-- Form to remove item -->
+                        <form method="POST" action="{% url 'remove-cart-item' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p>
+            <strong>Total:</strong> $
+            {{ cart_items|sum_cart|floatformat:2 }}
+        </p>
+
+        <a href="{% url 'order-page' %}">
+            <button>Proceed to Checkout</button>
+        </a>
+        {% else %}
+        <p>Your cart is empty. <a href="{% url 'menu' %}">Go back to the menu</a>.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
